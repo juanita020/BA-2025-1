@@ -1,0 +1,41 @@
+data(murders)
+
+murders |> ggplot() #Le estoy diciendo que voy a trabajar esos datos (murders) con ggplot
+
+head(murders)
+
+murders<- mutate(murders, rate= total/population*100000)
+#Actualizo murders con la opcion mutate (crea otra columna en, base al data set murders, con la variabe "rate")
+
+head(murders)
+
+murders|>ggplot()+geom_point(aes(x=population/10^6, y=total)) 
+#Garficar los datos murders en un grafico de puntos (aes= especifica como se van a trabajar los ejes y titulo)
+
+p <- murders|>ggplot(aes(population/10^6,total, label=abb)) #Redifinimos base de grafico como p
+
+#Se mueven los labels y se modifican las escalas del grafico
+p + geom_point(size=2)+geom_text(nudge_x=0.05)+scale_x_continuous(trans="log10")+scale_y_continuous(trans="log10")
+
+#Ahora agregamos etiquetas y titulos
+p + geom_point(size=3) + geom_text(nudge_x = 0.05) + 
+  scale_x_log10() + scale_y_log10() + 
+  xlab("Population in million (log scale)")+
+  ylab("Total Number of Murders (log scale)") + 
+  ggtitle("US Gun Murders in 2010")+
+  theme(plot.title=element_text(hjust=0.5))
+
+#Se redefine p para trabajar más rápido y que ahora le ponga un color a cada region
+p<-murders |>ggplot(aes(population/10^6, total, label =abb))+
+  geom_text(nudge_x=0.05)+
+  scale_x_log10()+
+  scale_y_log10()+
+  xlab("Populatins in millions(log scale)")+
+  ylab("Total number of murders(log scale)")+
+  ggtitle("US Gun Murders in 2010 2010")
+
+#Y darle un color diferente a cada región
+p+geom_point(aes(col=region), size=3)
+
+#Con paquetes adicionales podemos hacerlos más bonitos 
+library(ggthemes)
